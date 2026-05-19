@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Tour - Book Your Dream Holiday</title>
+    <style>
+        /* --- GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        nav {
+            background-color: #003580;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: #fff;
+            margin-left: 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links button:hover, .nav-links button.active {
+            background-color: #00224f;
+        }
+
+        /* --- CONTAINER & STRUCTURE --- */
+        .container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page {
+            display: none; /* Hidden by default */
+        }
+
+        .page.active {
+            display: block; /* Shown only when active */
+        }
+
+        h1, h2 {
+            margin-bottom: 1.5rem;
+            color: #003580;
+        }
+
+        /* --- PAGE 1: HOME PAGE --- */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80') center/cover;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
+        .search-box {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .btn-search {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background 0.3s;
+        }
+
+        .btn-search:hover {
+            background-color: #e65547;
+        }
+
+        /* --- PAGE 2: TOUR PACKAGES --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #003580;
+            margin: 1rem 0;
+        }
+
+        .btn-book {
+            background-color: #003580;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: auto;
+            transition: background 0.3s;
+        }
+
+        .btn-book:hover {
+            background-color: #00224f;
+        }
+
+        /* --- PAGES 3, 4, 5: INTERACTIVE FORMS --- */
+        .form-container {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+
+        .form-container h2 {
+            text-align: center;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: #003580;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #00224f;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #003580;
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="navigateTo('home')">🌍 World Tour</div>
+        <div class="nav-links">
+            <button id="nav-home" class="active" onclick="navigateTo('home')">Home</button>
+            <button id="nav-results" onclick="navigateTo('results')">Packages</button>
+            <button id="nav-login" onclick="navigateTo('login')">Login</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <section id="page-home" class="page active">
+            <div class="hero">
+                <h1>Explore the World with World Tour</h1>
+                <p>Find the best deals on flights, hotels, and holiday packages</p>
+            </div>
+            <div class="search-box">
+                <div class="form-group">
+                    <label for="search-destination">Where to?</label>
+                    <select id="search-destination">
+                        <option value="all">All Destinations</option>
+                        <option value="paris">Paris, France</option>
+                        <option value="bali">Bali, Indonesia</option>
+                        <option value="tokyo">Tokyo, Japan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="search-date">Departure Date</label>
+                    <input type="date" id="search-date">
+                </div>
+                <button class="btn-search" onclick="searchPackages()">Search Packages</button>
+            </div>
+        </section>
+
+        <section id="page-results" class="page">
+            <h2>Available Holiday Packages</h2>
+            <div class="results-grid" id="results-container">
+                </div>
+        </section>
+
+        <section id="page-booking" class="page">
+            <div class="form-container">
+                <h2>Passenger Details</h2>
+                <div id="selected-package-summary" style="margin-bottom: 1.5rem; font-weight: bold; color: #ff6f61; text-align: center;"></div>
+                <form id="booking-form" onsubmit="handleBooking(event)">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe" required>
+                    
+                    <label>Email Address</label>
+                    <input type="email" placeholder="john@example.com" required>
+                    
+                    <label>Phone Number</label>
+                    <input type="tel" placeholder="+1 234 567 890" required>
+                    
+                    <button type="submit" class="btn-submit">Proceed to Payment</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="page-payment" class="page">
+            <div class="form-container">
+                <h2>Secure Checkout</h2>
+                <p id="payment-amount" style="text-align: center; margin-bottom: 1.5rem; font-weight: bold; font-size: 1.2rem; color: #333;"></p>
+                <form id="payment-form" onsubmit="handlePayment(event)">
+                    <label>Name on Card</label>
+                    <input type="text" placeholder="John Doe" required>
+                    
+                    <label>Card Number</label>
+                    <input type="text" placeholder="1234 5678 9101 1121" maxlength="16" required>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label>Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label>CVV</label>
+                            <input type="password" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Pay Now</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="page-login" class="page">
+            <div class="form-container">
+                <h2>Welcome Back</h2>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="enter your email" required>
+                    
+                    <label>Password</label>
+                    <input type="password" placeholder="enter your password" required>
+                    
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 World Tour. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Data Store: Simulated Database for Travel Packages
+        const packages = [
+            { id: 1, title: "Romantic Paris Getaway", destination: "paris", price: "$1,200", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=500&q=80", desc: "5 Days / 4 Nights. Includes flights, luxury hotel, and Eiffel Tower tour." },
+            { id: 2, title: "Tropical Bali Paradise", destination: "bali", price: "$850", img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=500&q=80", desc: "6 Days / 5 Nights. Includes beachfront villa, spa resort, and guided surfing." },
+            { id: 3, title: "Tokyo Cultural Adventure", destination: "tokyo", price: "$1,500", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=500&q=80", desc: "5 Days / 4 Nights. Includes bullet train pass, city tour, and food tastings." }
+        ];
+
+        let selectedPackage = null;
+
+        // 1. Single Page Routing Function
+        function navigateTo(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show target page
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) targetPage.classList.add('active');
+
+            // Manage Active Styling on Navigation Links
+            document.querySelectorAll('.nav-links button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) activeNav.classList.add('active');
+            
+            // Scroll to the top smoothly on layout change
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 2. Home Page: Filter routing based on destination
+        function searchPackages() {
+            const selectedDest = document.getElementById('search-destination').value;
+            renderPackages(selectedDest);
+            navigateTo('results');
+        }
+
+        // 3. Packages Page: Dynamically render card grids
+        function renderPackages(filterDest = 'all') {
+            const container = document.getElementById('results-container');
+            container.innerHTML = ''; // Clear prior entries
+
+            const filtered = filterDest === 'all' ? packages 
+                : packages.filter(p => p.destination === filterDest);
+
+            if(filtered.length === 0) {
+                container.innerHTML = `<p>No packages found for this selection.</p>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${p.img}" alt="${p.title}">
+                    <div class="card-content">
+                        <h3>${p.title}</h3>
+                        <p style="font-size:0.9rem; color:#666; margin: 0.5rem 0;">${p.desc}</p>
+                        <div class="card-price">${p.price}</div>
+                        <button class="btn-book" onclick="selectPackage(${p.id})">Book Now</button>
+                    </div>
+                `;
+                container.append(card);
+            });
+        }
+
+        // 4. Booking Selection Route
+        function selectPackage(id) {
+            selectedPackage = packages.find(p => p.id === id);
+            document.getElementById('selected-package-summary').innerText = `Reviewing: ${selectedPackage.title} (${selectedPackage.price})`;
+            navigateTo('booking');
+        }
+
+        // 5. Form Submissions (Interactive Event Handlers)
+        function handleBooking(event) {
+            event.preventDefault(); // Prevents page reload
+            document.getElementById('payment-amount').innerText = `Total Amount to Pay: ${selectedPackage ? selectedPackage.price : '$0'}`;
+            navigateTo('payment');
+        }
+
+        function handlePayment(event) {
+            event.preventDefault();
+            alert('🎉 Payment successful! Your tour confirmation has been sent to your email.');
+            document.getElementById('booking-form').reset();
+            document.getElementById('payment-form').reset();
+            navigateTo('home');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('🔐 Login Successful! Welcome back to World Tour.');
+            document.getElementById('login-form').reset();
+            navigateTo('home');
+        }
+
+        // Initialize App Default State
+        window.onload = () => {
+            renderPackages('all');
+            
+            // Auto-set the date input selector to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('search-date').value = tomorrow.toISOString().split('T')[0];
+        };
+    </script>
+</body>
+</html>
